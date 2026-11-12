@@ -35,3 +35,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;ba
 @media(max-width:619px){.matrix-hero{padding-top:50px}.mesh-scene{height:154px}.mesh-orb{width:145px;animation:none}.matrix-bars{height:195px}.month-name{font-size:8px}.month-value{font-size:8px}.pos-actions{align-items:flex-start;text-align:left}.side-status{display:none}}
 @media(hover:none),(pointer:coarse){.hud-tilt{transform:none!important}.matrix-hero .mesh-orb{animation:none}}
 @media(prefers-reduced-motion:reduce){#matrix-rain{display:none}.mesh-orb{animation:none}.hud-tilt{transform:none!important}.matrix-cube,.asset-cuboid,.matrix-donut svg{transition:none!important;transform:none!important}}
+/* One-shot, decorative decryption boot. Text never changes, including screen-reader values. */
+@keyframes hud-decrypt{0%{opacity:.78;filter:blur(1px);text-shadow:-2px 0 #00ff41,2px 0 #177931}26%{opacity:1;filter:none;text-shadow:2px 0 #00ff4175,-2px 0 #6ba97f}63%{text-shadow:-1px 0 #00ff4140,1px 0 #7abf8c}100%{opacity:1;filter:none;text-shadow:none}}
+.decrypt-title,.matrix-hero h1,.k>b{animation:hud-decrypt .52s steps(4,end) 1 both}
+@media(prefers-reduced-motion:reduce){.decrypt-title,.matrix-hero h1,.k>b{animation:none!important}}
