@@ -1,0 +1,81 @@
+name: Test, build and deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages-production
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test and package site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run regression tests
+        run: npm test
+
+      - name: Build static site
+        run: npm run build
+
+      # This repository uses its own Node build script, not Vite. Its HTML
+      # references are relative so Pages can serve them under /repo-name/.
+      - name: Verify relative paths for GitHub Pages
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const html = fs.readFileSync('dist/index.html', 'utf8');
+          if (html.includes('../shared/')) throw Error('Unrewritten shared/ path in dist/index.html');
+          let checked = 0;
+          for (const match of html.matchAll(/\b(?:src|href)="([^"]+)"/g)) {
+            const url = match[1];
+            if (/^(?:https?:|data:|mailto:|#)/i.test(url)) continue;
+            if (url.startsWith('/') || url.includes('..')) throw Error('Invalid GitHub Pages path: ' + url);
+            const localPath = path.join('dist', url.split(/[?#]/, 1)[0]);
+            if (!fs.existsSync(localPath)) throw Error('Missing build asset: ' + localPath);
+            checked++;
+          }
+          if (!checked) throw Error('No local assets checked');
+          console.log('Verified ' + checked + ' relative assets for repository subpath hosting.');
+          NODE
+
+      - name: Disable Jekyll processing
+        run: touch dist/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    name: Publish GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy published artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
