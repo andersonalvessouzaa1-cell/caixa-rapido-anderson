@@ -1,0 +1,12 @@
+/* Reskin entrypoint: edit this file first when reusing the finance core. */
+:root{
+ color-scheme:dark;
+ --bg:#050505;--card:#0D1117;--surface:#101d16;--input:#08130d;
+ --sec:#00FF41;--accent-soft:#008F11;--tx:#E6FFE6;--mu:#AFC9B6;
+ --ln:#315441;--ok:#68f295;--bad:#ff9fa6;--warn:#f6d28b;
+ --focus:#a8ffb9;--glow:0 0 25px #00ff4116;--elev:0 17px 48px #0009;
+ --font-body:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;
+ --font-mono:'JetBrains Mono','Fira Code',ui-monospace,SFMono-Regular,monospace;
+ --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;
+ --space-6:24px;--space-8:32px;--radius:16px;--rail:235px;
+}

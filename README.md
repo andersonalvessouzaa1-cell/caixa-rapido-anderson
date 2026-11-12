@@ -1,18 +1,23 @@
-# Caixa Rápido — Anderson
+# Caixa Rápido — Matrix HUD 3D (Anderson)
 
-Aplicação pessoal de controle financeiro, com visual aprovado, captura rápida, histórico, categorias e orçamentos, previsões, relatórios e integração Google Drive/Sheets. Este repositório privado guarda a implementação Anderson como referência reutilizável para futuras instalações personalizadas.
+Aplicação privada de controle financeiro pessoal com captura por texto, histórico, categorias, orçamentos mensais, contas previstas, relatórios, **mapa anual de despesas por nicho** e **carteira de investimentos com retornos informados manualmente**. A camada visual Matrix 3D é intercambiável com outros temas; o núcleo financeiro não depende de efeitos visuais.
 
-## Estado desta versão
+## Funcionalidades
 
-- A aplicação publicada do Anderson usa este mesmo código-base; o projeto mantém hospedagem privada do proprietário.
-- A conta Google autorizada é configurada no arquivo `shared/google-config.js`. Esse arquivo contém somente o Client ID público e o endereço de conta permitido; não há client secret no navegador nem no repositório.
-- Os dados financeiros ficam na planilha privada do proprietário e não foram copiados para este repositório.
-- O tema aprovado é escuro com acentos violeta; o verde Matrix aparece somente na assinatura discreta `Rudeboybrdev`.
-- A demonstração/local e a conta Google são isoladas. Em caso de sincronização, aguarde o estado **“Confirmado no Google”** antes de fechar a página.
+- **Captura rápida:** texto natural, interpretação de valor/data/tipo/categoria, revisão e confirmação; formulário manual alternativo.
+- **Histórico:** edição, desfazer/restaurar, filtros e exportação CSV protegida contra células maliciosas.
+- **Recorrências:** mês correto, previsão independente dos valores realizados, desfeitos restauram a previsão.
+- **Orçamentos e relatórios:** limites por mês, alertas locais, gráficos financeiros e categorias.
+- **Gastos anuais:** YTD total, participação (%) de `Salão/Beleza`, `Internet/Assinaturas`, `Mercado/Alimentação`, `Serviços`, `Outros`; donut com profundidade, barras mensais e filtros por nicho/mês. Serviços recorrentes são inferidos por descrições repetidas em **meses diferentes**, não por cadastro de estabelecimento.
+- **Investimentos:** posições de Renda Fixa, Ações, FIIs, Cripto, Tesouro Direto e Reserva; adicionar, editar, remover; valor investido em centavos, retorno percentual **acumulado informado**, patrimônio estimado e alocação por classe. Nenhuma cotação em tempo real.
+- **Persistência:** bases pessoais, de demonstração e Google mantidas separadas; backups JSON, histórico de revisões Google e proteção contra conflito.
+- **UX Matrix:** CSS 3D, fundo de chuva digital de baixa opacidade, botões táteis, painéis HUD, foco visível, redução de movimento e fallback estático no mobile. Sem dependência Three.js/WebGL.
 
-## Começar localmente
+## Tecnologias
 
-Requer Node.js 18 ou superior. Não há dependências npm de runtime.
+HTML5, CSS3, JavaScript puro, Node.js 18+, Google Identity Services (OAuth) e Google Sheets/Drive. Não há dependências npm em runtime. Gráficos renderizados com CSS e SVG; canvas decorativo limitado à tela desktop e pausado quando oculto.
+
+## Começar
 
 ```bash
 npm test
@@ -20,25 +25,66 @@ npm run build
 npm start
 ```
 
-O servidor local padrão usa `http://localhost:5200`. O build gera `dist/`. Os arquivos de dados do navegador não são armazenados no diretório do repositório.
+Servidor local em `http://localhost:5200`. O build gera `dist/`, contendo `index.html`, `app.js`, `domain.js`, pastas de tema/componentes/módulos e `shared/`. **Nunca publique a pasta de código-fonte sem revisar o acesso à conta Google configurada.**
 
-## Estrutura
+## Arquitetura
 
-- `src/` — interface, estilos e adaptador de domínio.
-- `shared/` — regras financeiras, persistência local, histórico e integração Google.
-- `tests/` — testes do núcleo, adaptadores, armazenamento, histórico e cliente Google simulado.
-- `approved/` — captura HTML congelada do design aprovado.
-- `docs/BLUEPRINT_MESTRE_CAIXA_RAPIDO_WEB.md` — especificação mestre; a atualização 4.7 no início reflete o estado mais recente e prevalece sobre notas históricas.
-- `docs/GOOGLE_USO.md` — limites e operação da sincronização desta instalação.
-- `docs/REUSO_INSTALACOES.md` — checklist para criar outras instalações isoladas.
-- `docs/GUIA_PREVENCAO_TRAVAMENTOS_IA.md` — lições para reduzir repetição e alegações sem evidência em agentes de código.
+```text
+src/
+  index.html          composição e carregamento dos módulos
+  app.js              fluxos existentes, roteamento das telas e ações
+  domain.js           adaptador legado / centavos do núcleo
+  components/
+    widgets.js        widgets anuais e investimentos (renderizadores puros)
+    hud.js            chuva digital e perspectiva, sem dados financeiros
+  modules/
+    annual.js         classificação, filtro YTD, participação e repetição
+    investments.js    validação e projeções de patrimônio
+  theme/
+    tokens.css        variáveis de cor, tipo, spacing e bordas para reskin
+    matrix.css        skin Matrix (HUD, 3D, layout)
+  utils/
+    format.js         moeda, percentuais e escape de HTML
+  styles.css          elementos e componentes base independentes do tema
+shared/
+  core.js             validação, parsing, valores e backups
+  local.js            persistência por instalação e modo
+  history.js          histórico append-only, versão corrente
+  google.js           OAuth, sincronia e projeção em Sheets
+  google-config.js    configuração específica da conta atual (privada)
+tests/                 testes do negócio, armazenamento, regressões, UI
+```
 
-## Reutilizar em outra instalação
+### Modelo de dados
 
-Leia `docs/REUSO_INSTALACOES.md` antes de clonar como produto de outra pessoa. Crie configuração OAuth, planilha, instalação e armazenamento separados para cada proprietário. Nunca reutilize a configuração Google do Anderson. Use `shared/google-config.example.js` como modelo e substitua os valores conforme a nova instalação. A cópia ainda exige configurar origens OAuth e hospedagem.
+O estado canônico mantém `txs[]`, `recs[]`, `budgets`, `budgetMonths`, `customRules`, `alerts` e o novo campo **opcional** `investments[]`:
 
-## Google e segurança
+```json
+{"id":"inv_001","kind":"Renda Fixa","name":"CDB Exemplo","invested":100001,"returnBps":825}
+```
 
-A integração usa Google Identity Services e o escopo limitado `drive.file`; o token permanece apenas em memória. A sincronização mantém revisões no histórico privado da planilha e detecta conflito em vez de sobrescrever silenciosamente. Use um aparelho por vez: não há mesclagem automática simultânea. Alterações manuais na aba de visualização não são importadas. Mantenha backups.
+`invested` está em **centavos**; `returnBps=825` corresponde a um retorno acumulado informado de **8,25%**. O valor atual estimado é `round(invested * (1 + returnBps / 10000))`, com piso zero. Alocação é calculada com valores atuais estimados, não com aportes originais. O estado antigo, sem `investments`, continua legível; o próximo salvamento inclui `investments:[]`. Backups v1 ainda podem ser restaurados, e a nova coleção entra nas revisões de `_historico` sem precisar criar uma aba de planilha. A aba `Lançamentos` continua sendo apenas uma projeção das movimentações, e não um espelho da carteira.
 
-O repositório é privado e não deve ser tornado público com a configuração atual, pois inclui detalhes da conta Google autorizada. Mesmo sendo privado, nunca adicione client secrets, tokens, backups financeiros ou dados reais de transações.
+**Regras importantes:** compra de ativo não vira automaticamente despesa de consumo; entradas e saídas previstas/desfeitas não entram em YTD. Categorias são classificadas por heurística em `src/modules/annual.js`; revise palavras-chave da instalação. Não há integração com corretoras nem atualização de preços.
+
+## Trocar o tema de clones futuros
+
+1. Edite somente `src/theme/tokens.css` para alterar a paleta, fontes, raio, espaçamento e sombras.
+2. Substitua `src/theme/matrix.css` por outro arquivo de skin (e ajuste a referência em `src/index.html`); `src/styles.css` contém padrões funcionais e legíveis.
+3. Troque `window.CaixaConfig.displayName`, título, metadados e assinatura na entrada. Adapte os textos de `src/app.js` para o produto de destino.
+4. Para instalações diferentes, **configure uma nova conta/Client ID/origens autorizadas, ID de instalação, planilha e dados** em `shared/google-config.js` + `window.INSTALLATION_ID`. Nunca compartilhe a planilha pessoal do Anderson.
+5. Execute `npm test`, `npm run build`, o roteiro de QA mobile e teste a integração Google na conta de destino antes de liberar.
+
+**Não mova regras, históricos ou integrações para o tema.** `shared/` e `src/modules/` são independentes da skin.
+
+## Testes e desempenho
+
+`npm test` cobre parsing, backup, histórico, persistência, Google simulado, recorrências, classificação anual, retorno e validação de carteira. `npm run build` verifica sintaxe e empacota os arquivos. Foi testada a navegação em Chromium nas larguras 320, 360, 390, 480, 620, 768, 799, 800, 1024, 1280, 1440 e 1920 pixels, incluindo gravação/remoção local de posição, filtros e ausência de overflow horizontal. Essa bateria não substitui testes reais de OAuth, Google Sheets, leitores de tela ou dispositivos físicos. FPS depende do dispositivo; o render visual usa CSS/SVG e chuva digital com atualização reduzida.
+
+## Segurança, privacidade e deploy
+
+O repositório é **privado**. Não comite tokens, client secrets, backups reais, dumps da planilha ou dados pessoais. OAuth roda apenas com a conta permitida; a persistência local é separada da sincronização. Aguarde **“Confirmado no Google”** após alterações.
+
+**GitHub não publica automaticamente este site.** O endereço privado `chatgpt.site` é gerenciado pelo ChatGPT Sites e requer abrir o Site correspondente, salvar a versão e clicar em **Deploy**. O ZIP gerado pelo build pode ser entregue ao fluxo de publicação, mas somente quando o proprietário puder verificar o vínculo com o Site atual. Não substitua dados em produção sem backup anterior.
+
+Consulte `docs/STATUS_PUBLICACAO.md`, `docs/REUSO_INSTALACOES.md` e `docs/GOOGLE_USO.md` para os requisitos específicos desta instalação.

@@ -44,6 +44,11 @@ function validate(s){
  const ids=new Set();for(const t of s.txs){if(!t||typeof t.id!=='string'||!/^[A-Za-z0-9_.:-]{1,160}$/.test(t.id)||ids.has(t.id)||!valid(t.date)||!['in','out'].includes(t.type)||!['prev','real'].includes(t.st)||!Number.isSafeInteger(t.cents)||t.cents<=0||t.cents>999999999999||typeof t.desc!=='string'||typeof t.cat!=='string'||t.desc.length>1000||t.cat.length>100)throw Error('Lançamento inválido ou ID repetido no backup.');ids.add(t.id);}
  for(const r of s.recs){if(!r||typeof r.id!=='string'||!/^[A-Za-z0-9_.:-]{1,160}$/.test(r.id)||!Number.isSafeInteger(r.cents)||r.cents<=0||!Number.isInteger(r.day)||r.day<1||r.day>31||!['in','out'].includes(r.type)||typeof r.desc!=='string'||typeof r.cat!=='string')throw Error('Recorrência inválida no backup.');}
  for(const b of [s.budgets,...Object.values(s.budgetMonths||{})]){if(!b||typeof b!=='object')throw Error('Orçamentos inválidos.');for(const v of Object.values(b))if(!Number.isSafeInteger(v)||v<0)throw Error('Limite inválido.');}
+ if(s.investments!==undefined){
+  if(!Array.isArray(s.investments)||s.investments.length>500)throw Error('Carteira inválida.');
+  const allowed=['Renda Fixa','Ações','FIIs','Cripto','Tesouro Direto','Reserva'];const unique=new Set();
+  for(const p of s.investments){if(!p||typeof p.id!=='string'||!/^[A-Za-z0-9_.:-]{1,160}$/.test(p.id)||unique.has(p.id)||!allowed.includes(p.kind)||typeof p.name!=='string'||!p.name.trim()||p.name.length>80||!Number.isSafeInteger(p.invested)||p.invested<1||p.invested>999999999999||!Number.isSafeInteger(p.returnBps)||p.returnBps < -10000||p.returnBps>999900)throw Error('Posição de investimento inválida.');unique.add(p.id);}
+ }
  if(s.customRules&&!s.customRules.every(r=>Array.isArray(r)&&['in','out'].includes(r[0])&&typeof r[1]==='string'&&Array.isArray(r[2])&&r[2].every(k=>typeof k==='string')))throw Error('Dicionário inválido.');
  return s;
 }

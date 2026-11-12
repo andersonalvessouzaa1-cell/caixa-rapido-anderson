@@ -1,8 +1,27 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8">
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Caixa Rápido — Anderson</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css"></head><body><div id="app"></div>
-<script src="../shared/core.js"></script><script>window.INSTALLATION_ID="anderson";</script><script src="../shared/local.js"></script><script src="domain.js"></script>
-<script src="../shared/history.js"></script><script src="../shared/google-config.js"></script><script src="https://accounts.google.com/gsi/client" async defer></script><script src="../shared/google.js"></script><script src="app.js"></script><script>CRCloud.bind();</script></body></html>
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Caixa Rápido: controle financeiro pessoal, gastos anuais e carteira de investimentos.">
+<title>Caixa Rápido — Matrix HUD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme/tokens.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="theme/matrix.css">
+</head>
+<body>
+<a href="#main-content" style="position:absolute;top:-100px;left:10px;z-index:99;background:#00ff41;color:#050505;padding:12px" onfocus="this.style.top='10px'" onblur="this.style.top='-100px'">Pular para o conteúdo</a>
+<canvas id="matrix-rain" aria-hidden="true"></canvas><div id="matrix-scan" aria-hidden="true"></div>
+<div id="app"></div>
+<script>window.INSTALLATION_ID='anderson';window.CaixaConfig={displayName:'Anderson',brand:'Caixa Rápido'};</script>
+<script src="../shared/core.js"></script><script src="../shared/local.js"></script>
+<script src="../shared/history.js"></script><script src="../shared/google-config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script><script src="../shared/google.js"></script>
+<script src="utils/format.js"></script><script src="modules/annual.js"></script><script src="modules/investments.js"></script><script src="components/widgets.js"></script>
+<script src="domain.js"></script><script src="app.js"></script><script src="components/hud.js"></script>
+<script>CRCloud.bind();</script>
+</body></html>

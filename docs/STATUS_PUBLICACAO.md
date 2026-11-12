@@ -13,3 +13,7 @@ Atualizado em 12/11/2026. Este documento descreve somente a instalação pessoal
 Limites: a publicação continua privada pelo ChatGPT; autorização Google não abre o acesso público. OAuth está em modo de teste e não é cadastro comercial geral. Uma pessoa/aparelho por vez para esta instalação; sem mesclagem simultânea automática. Mantenha backups e espere “Confirmado no Google”.
 
 Não inclua exports da planilha, dados financeiros, access tokens, client secrets, dumps do navegador ou arquivos de perfil Google em commits.
+
+## Atualização Matrix HUD V3 (12/11/2026)
+
+Código atualizado com tema intercambiável, despesas anuais e carteira manual opcional. `npm test` e `npm run build` passaram; a QA local usa dados fictícios ou isolados e não substitui autenticação/sincronização real. **GitHub não é um deploy automático do ChatGPT Sites.** Confirmar publicação pela interface do Site e validar a versão/conta real antes de declarar lançamento concluído.

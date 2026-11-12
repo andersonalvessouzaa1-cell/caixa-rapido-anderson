@@ -3,7 +3,7 @@
 const id=window.INSTALLATION_ID,base='caixa-rapido:'+id+':v1:',keyMode=base+'mode';
 let mode;try{mode=localStorage.getItem(keyMode)||'personal'}catch{mode='personal'}
 let currentRaw=null,blocked=false,dirty=false,status='';
-const empty=()=>({txs:[],recs:[],budgets:{},budgetMonths:{},customRules:[],alerts:{}});
+const empty=()=>({txs:[],recs:[],budgets:{},budgetMonths:{},customRules:[],alerts:{},investments:[]});
 function load(){const key=base+mode;try{currentRaw=localStorage.getItem(key);if(!currentRaw)return empty();return CR.validate(JSON.parse(currentRaw));}catch(e){blocked=true;status='Não foi possível abrir os dados locais. Exporte/recupere antes de continuar. '+e.message;return empty();}}
 let api;
 function save(state){if(blocked)throw Error(status||'Dados alterados em outra aba. Recarregue antes de salvar.');const key=base+mode;
