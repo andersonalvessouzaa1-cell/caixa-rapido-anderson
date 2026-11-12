@@ -29,3 +29,19 @@ summary{cursor:pointer;padding:8px 0}
 @media(max-width:760px){nav{top:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:calc(100% - 20px);justify-content:space-between}nav button{padding:9px 6px;font-size:11px;flex:1}.g3,.g2,.hero{grid-template-columns:1fr}.w{padding-top:30px}}
 
 svg{max-width:100%;height:auto}.num,.k b{font-variant-numeric:tabular-nums}.g>*{min-width:0}button:focus-visible,a:focus-visible{outline:2px solid var(--sec);outline-offset:3px}button,input,select{min-height:42px}table{display:block;overflow:auto}.tr>div{min-width:0}.tr .row{justify-content:flex-end}.tg{max-width:calc(100vw - 24px)}@media(max-width:760px){nav{overflow:auto;justify-content:flex-start}nav button{flex:none;white-space:nowrap}.tr{align-items:flex-start;flex-wrap:wrap}.hero .g3{grid-template-columns:1fr}.w{padding-bottom:150px}h1{overflow-wrap:anywhere}input{max-width:100%}}
+
+/* Aperfeiçoamentos responsivos e de acessibilidade, mantendo o tema aprovado. */
+@media(max-width:480px){
+ .w{padding-inline:14px}
+ .c{padding:16px;border-radius:16px}
+ .pv .row{flex-direction:column;align-items:flex-start;gap:10px!important}
+ .tr{gap:12px}
+ .tr>div:first-child{width:100%;overflow-wrap:anywhere}
+ .tr>.row{width:100%;justify-content:flex-start}
+ .hero{gap:18px}
+ .g{gap:10px}
+ .tg{width:calc(100vw - 28px);justify-content:space-between;bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+ nav button{min-height:44px}
+ input,select,button.b{min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
