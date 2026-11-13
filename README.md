@@ -88,3 +88,8 @@ O repositório é **privado**. Não comite tokens, client secrets, backups reais
 **GitHub não publica automaticamente este site.** O endereço privado `chatgpt.site` é gerenciado pelo ChatGPT Sites e requer abrir o Site correspondente, salvar a versão e clicar em **Deploy**. O ZIP gerado pelo build pode ser entregue ao fluxo de publicação, mas somente quando o proprietário puder verificar o vínculo com o Site atual. Não substitua dados em produção sem backup anterior.
 
 Consulte `docs/STATUS_PUBLICACAO.md`, `docs/REUSO_INSTALACOES.md` e `docs/GOOGLE_USO.md` para os requisitos específicos desta instalação.
+
+
+## Hero Clean e navegação (12/11/2026)
+
+A tela inicial não contém mais o globo 3D. A sidebar pode recolher no desktop e abrir no celular; o painel de conexão Google foi integrado à coluna principal. Em Ajustes, Limpar Tudo exige confirmação e backup local verificável e Restaurar Dados (Desfazer) recupera o último backup desta base. A limpeza em modo Google também pode sincronizar exclusões: salve backup JSON e confira a conta.
